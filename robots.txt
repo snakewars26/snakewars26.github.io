@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://snakewars26.github.io/snakewars/sitemap.xml
