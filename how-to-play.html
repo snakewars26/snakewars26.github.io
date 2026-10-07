@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comment jouer à SnakeWars.io — Guide complet Battle Royale Serpent</title>
+<meta name="description" content="Guide complet de SnakeWars.io : contrôles, stratégies, skills, skins et astuces pour dominer le Battle Royale serpent multijoueur. Tout ce qu'il faut savoir pour gagner.">
+<meta name="keywords" content="snakewars guide, comment jouer snake, stratégie battle royale, astuces snake io, skills snakewars, tutoriel serpent multijoueur">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://snakewars26.github.io/how-to-play.html">
+<link rel="icon" type="image/png" href="favicon.png">
+<meta property="og:title" content="Guide SnakeWars.io — Comment jouer et gagner">
+<meta property="og:description" content="Contrôles, stratégies, skills et astuces pour dominer SnakeWars.io, le jeu de serpent Battle Royale multijoueur gratuit.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://snakewars26.github.io/how-to-play.html">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Exo+2:wght@400;600&display=swap" rel="stylesheet">
+<!-- Google Consent Mode v2 -->
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('consent', 'default', {
+    ad_storage: 'denied', ad_user_data: 'denied',
+    ad_personalization: 'denied', analytics_storage: 'denied',
+    security_storage: 'granted', wait_for_update: 2000
+  });
+  gtag('set', 'ads_data_redaction', true);
+  gtag('set', 'url_passthrough', true);
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-TYFWEZKRJY"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-TYFWEZKRJY', { anonymize_ip: true });
+</script>
+<meta name="google-adsense-account" content="ca-pub-5433648295830648">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5433648295830648" crossorigin="anonymous"></script>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#050810; color:#fff; font-family:'Exo 2',sans-serif; min-height:100vh; }
+  .page { max-width:760px; margin:0 auto; padding:2rem 1.2rem 5rem; }
+  .logo { font-family:'Orbitron',monospace; font-size:1.4rem; font-weight:900;
+    background:linear-gradient(135deg,#00f5ff 0%,#39ff14 45%,#ffd700 75%,#ff006e 100%);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+    margin-bottom:0.3rem; }
+  .back { display:inline-block; font-family:'Orbitron',monospace; font-size:0.65rem;
+    color:#00d4ff; text-decoration:none; border:1px solid rgba(0,212,255,0.3);
+    padding:0.4rem 1rem; border-radius:8px; margin-bottom:1.5rem; }
+  .back:hover { background:rgba(0,212,255,0.08); }
+  h1 { font-family:'Orbitron',monospace; font-size:1.1rem; color:#00f5ff;
+    margin-bottom:0.5rem; letter-spacing:0.05em; }
+  .subtitle { font-size:0.8rem; color:rgba(255,255,255,0.45); margin-bottom:2rem; letter-spacing:0.05em; }
+  h2 { font-family:'Orbitron',monospace; font-size:0.78rem; color:#39ff14;
+    margin:2.2rem 0 0.8rem; letter-spacing:0.08em; text-transform:uppercase;
+    padding-bottom:0.4rem; border-bottom:1px solid rgba(57,255,20,0.15); }
+  h3 { font-family:'Orbitron',monospace; font-size:0.62rem; color:#ffd700;
+    margin:1.3rem 0 0.5rem; letter-spacing:0.06em; }
+  p { font-size:0.84rem; color:rgba(255,255,255,0.75); line-height:1.9; margin-bottom:0.8rem; }
+  ul, ol { padding-left:1.4rem; margin-bottom:0.9rem; }
+  li { font-size:0.82rem; color:rgba(255,255,255,0.7); line-height:1.85; margin-bottom:0.35rem; }
+  a { color:#00d4ff; }
+  strong { color:#fff; }
+  em { color:rgba(255,255,255,0.85); font-style:normal; font-weight:600; }
+  .section { background:rgba(0,212,255,0.04); border:1px solid rgba(0,212,255,0.12);
+    border-radius:14px; padding:1.4rem 1.4rem 0.8rem; margin-bottom:1.2rem; }
+  .section-green { background:rgba(57,255,20,0.04); border-color:rgba(57,255,20,0.15); }
+  .section-gold { background:rgba(255,215,0,0.04); border-color:rgba(255,215,0,0.15); }
+  .section-red { background:rgba(255,0,110,0.05); border-color:rgba(255,0,110,0.15); }
+  .tip { display:flex; gap:0.8rem; align-items:flex-start; background:rgba(57,255,20,0.05);
+    border:1px solid rgba(57,255,20,0.2); border-radius:12px; padding:0.9rem 1rem;
+    margin-bottom:0.7rem; }
+  .tip-icon { font-size:1.3rem; flex-shrink:0; }
+  .tip-text { font-size:0.8rem; color:rgba(255,255,255,0.75); line-height:1.75; }
+  .tip-text strong { color:#39ff14; }
+  .warn { display:flex; gap:0.8rem; align-items:flex-start; background:rgba(255,0,110,0.05);
+    border:1px solid rgba(255,0,110,0.2); border-radius:12px; padding:0.9rem 1rem;
+    margin-bottom:0.7rem; }
+  .warn-text { font-size:0.8rem; color:rgba(255,255,255,0.75); line-height:1.75; }
+  .warn-text strong { color:#ff006e; }
+  .ctrl-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.8rem; margin-bottom:1rem; }
+  @media(max-width:480px){ .ctrl-grid { grid-template-columns:1fr; } }
+  .ctrl-card { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08);
+    border-radius:12px; padding:1rem; }
+  .ctrl-device { font-family:'Orbitron',monospace; font-size:0.58rem; color:#ffd700;
+    letter-spacing:0.1em; margin-bottom:0.6rem; }
+  .ctrl-list { list-style:none; padding:0; }
+  .ctrl-list li { font-size:0.77rem; color:rgba(255,255,255,0.65); line-height:1.7;
+    display:flex; gap:0.5rem; align-items:flex-start; }
+  .ctrl-list li::before { content:'▶'; color:#00f5ff; font-size:0.5rem; margin-top:0.3rem; flex-shrink:0; }
+  .skill-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.7rem; margin-bottom:1rem; }
+  @media(max-width:480px){ .skill-grid { grid-template-columns:1fr; } }
+  .skill-card { background:rgba(0,212,255,0.04); border:1px solid rgba(0,212,255,0.15);
+    border-radius:12px; padding:0.9rem; }
+  .skill-name { font-family:'Orbitron',monospace; font-size:0.6rem; color:#00f5ff;
+    letter-spacing:0.08em; margin-bottom:0.35rem; }
+  .skill-desc { font-size:0.76rem; color:rgba(255,255,255,0.62); line-height:1.7; }
+  .skin-row { display:flex; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.8rem; }
+  .skin-tag { background:rgba(255,215,0,0.08); border:1px solid rgba(255,215,0,0.2);
+    border-radius:20px; padding:0.25rem 0.7rem; font-size:0.7rem; color:#ffd700; }
+  .step-list { counter-reset:steps; list-style:none; padding:0; }
+  .step-list li { counter-increment:steps; display:flex; gap:1rem; align-items:flex-start;
+    margin-bottom:0.9rem; font-size:0.82rem; color:rgba(255,255,255,0.72); line-height:1.8; }
+  .step-list li::before { content:counter(steps); font-family:'Orbitron',monospace;
+    font-size:0.9rem; font-weight:900; color:#050810; background:#00f5ff;
+    min-width:1.6rem; height:1.6rem; border-radius:50%; display:flex;
+    align-items:center; justify-content:center; flex-shrink:0; margin-top:0.05rem; }
+  .cta { display:block; text-align:center; font-family:'Orbitron',monospace; font-size:0.85rem;
+    font-weight:900; padding:1rem 2rem; border-radius:14px; text-decoration:none;
+    background:linear-gradient(135deg,#39ff14,#00c800); color:#050810;
+    box-shadow:0 0 30px rgba(57,255,20,0.4); margin:2rem auto 0; max-width:280px; }
+  footer { text-align:center; margin-top:3rem; font-size:0.55rem;
+    color:rgba(255,255,255,0.15); font-family:'Orbitron',monospace; }
+  footer a { color:rgba(0,212,255,0.4); text-decoration:none; }
+  footer a:hover { color:#00d4ff; }
+  .toc { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07);
+    border-radius:12px; padding:1rem 1.2rem; margin-bottom:2rem; }
+  .toc-title { font-family:'Orbitron',monospace; font-size:0.6rem; color:rgba(255,255,255,0.35);
+    letter-spacing:0.15em; margin-bottom:0.7rem; }
+  .toc ul { list-style:none; padding:0; margin:0; }
+  .toc li { margin-bottom:0.25rem; }
+  .toc a { font-size:0.78rem; color:rgba(0,212,255,0.8); text-decoration:none; }
+  .toc a:hover { color:#00d4ff; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="logo">SNAKEWARS</div>
+  <a class="back" href="index.html">← JOUER MAINTENANT</a>
+
+  <h1>🎮 GUIDE COMPLET — COMMENT JOUER</h1>
+  <div class="subtitle">Tout ce qu'il faut savoir pour survivre, dominer et gagner dans SnakeWars.io</div>
+
+  <!-- TABLE DES MATIÈRES -->
+  <div class="toc">
+    <div class="toc-title">📋 SOMMAIRE</div>
+    <ul>
+      <li><a href="#bases">Les bases du jeu</a></li>
+      <li><a href="#controles">Contrôles</a></li>
+      <li><a href="#objectif">Objectif et règles</a></li>
+      <li><a href="#skills">Skills actifs</a></li>
+      <li><a href="#skins">Skins et accessoires</a></li>
+      <li><a href="#coins">Coins et progression</a></li>
+      <li><a href="#boss">Le Boss</a></li>
+      <li><a href="#strategies">Stratégies avancées</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+  </div>
+
+  <!-- BASES -->
+  <h2 id="bases">🐍 Les bases du jeu</h2>
+  <div class="section">
+    <p>SnakeWars.io est un jeu de serpent Battle Royale multijoueur. Vous incarnez un serpent qui grandit en mangeant des orbes lumineux dispersés sur la carte. Votre serpent se déplace en continu dans la direction de votre curseur ou de votre doigt.</p>
+    <p>La règle fondamentale : <strong>ne jamais toucher le corps d'un autre serpent</strong> (ni les bords de la zone de jeu en mode Battle Royale). En revanche, vous pouvez piéger vos adversaires en croisant leur trajectoire — s'ils heurtent votre corps, ils meurent et laissent tomber leur masse en orbes que vous pouvez absorber.</p>
+    <p>La partie se termine soit quand vous mourez, soit quand vous êtes le dernier serpent en vie (mode Battle Royale).</p>
+  </div>
+
+  <!-- CONTRÔLES -->
+  <h2 id="controles">🕹️ Contrôles</h2>
+  <div class="ctrl-grid">
+    <div class="ctrl-card">
+      <div class="ctrl-device">🖥️ PC / BUREAU</div>
+      <ul class="ctrl-list">
+        <li>Déplacez la souris pour orienter le serpent</li>
+        <li>Clic gauche maintenu pour sprinter</li>
+        <li>Touches ZQSD ou flèches pour diriger</li>
+        <li>Espace pour activer le skill 1</li>
+        <li>Shift pour activer le skill 2</li>
+        <li>Ctrl pour activer le skill 3</li>
+      </ul>
+    </div>
+    <div class="ctrl-card">
+      <div class="ctrl-device">📱 MOBILE / TABLETTE</div>
+      <ul class="ctrl-list">
+        <li>Glissez le doigt pour orienter le serpent</li>
+        <li>Appui court sur les boutons de skill pour les activer</li>
+        <li>Double-tap ou bouton dédié pour sprinter</li>
+        <li>Pincez pour zoomer/dézoomer la caméra</li>
+        <li>Joystick virtuel disponible en bas gauche</li>
+      </ul>
+    </div>
+  </div>
+  <div class="tip">
+    <div class="tip-icon">💡</div>
+    <div class="tip-text"><strong>Astuce :</strong> Sur mobile, gardez toujours un pouce sur la zone de jeu et l'autre prêt sur les boutons de skill. La réactivité est clé pour éviter les collisions.</div>
+  </div>
+
+  <!-- OBJECTIF -->
+  <h2 id="objectif">🎯 Objectif et règles</h2>
+  <div class="section">
+    <h3>Score et classement</h3>
+    <p>Votre score est calculé en temps réel selon votre taille (nombre de segments de votre serpent). Plus vous mangez d'orbes et d'adversaires, plus votre score grimpe. Le classement en cours de partie s'affiche dans un coin de l'écran.</p>
+
+    <h3>Comment éliminer un adversaire</h3>
+    <p>Pour éliminer un serpent adverse, son <strong>chef</strong> (tête) doit percuter votre <strong>corps</strong>. Plusieurs techniques :</p>
+    <ul>
+      <li><strong>La coupe de route</strong> — Foncez devant un adversaire pour que sa tête percute votre flanc. La technique de base.</li>
+      <li><strong>L'encerclement</strong> — Tournez autour d'un serpent plus petit pour refermer votre corps comme un piège. Difficile à esquiver.</li>
+      <li><strong>La feinte</strong> — Feignez de fuir puis retournez brusquement sur votre adversaire qui vous poursuit.</li>
+      <li><strong>Le piège aux orbes</strong> — Placez-vous entre un gros tas d'orbes et un adversaire. Il sera tenté par la nourriture et foncera dans votre corps.</li>
+    </ul>
+
+    <h3>Mode Battle Royale</h3>
+    <p>En mode Battle Royale, une <strong>zone électrique</strong> se resserre progressivement. Rester en dehors de la zone sûre inflige des dégâts à votre serpent, qui rétrécit jusqu'à la mort. Surveillez les bords de la zone et repliez-vous vers le centre au fur et à mesure.</p>
+  </div>
+
+  <!-- SKILLS -->
+  <h2 id="skills">⚡ Skills actifs</h2>
+  <p>Avant chaque partie, vous équipez jusqu'à <strong>3 skills actifs</strong> parmi votre collection. Chaque skill a un cooldown après utilisation.</p>
+  <div class="skill-grid">
+    <div class="skill-card">
+      <div class="skill-name">⚡ SPRINT</div>
+      <div class="skill-desc">Augmente temporairement la vitesse de votre serpent. Consomme de la masse (votre serpent rétrécit légèrement pendant le sprint). Idéal pour fuir ou couper la route d'un adversaire.</div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-name">🛡️ BOUCLIER</div>
+      <div class="skill-desc">Crée une protection temporaire à la tête de votre serpent. Les collisions frontales avec d'autres serpents seront absorbées. Très utile dans la mêlée centrale.</div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-name">🌀 TÉLÉPORTATION</div>
+      <div class="skill-desc">Téléporte instantanément votre tête vers la position de votre curseur. Permet d'échapper à un encerclement ou de surprendre un adversaire.</div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-name">💥 EXPLOSION</div>
+      <div class="skill-desc">Projette une onde de choc autour de votre serpent, repoussant les adversaires proches. Parfait pour briser un encerclement ou créer de l'espace.</div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-name">🧲 AIMANT</div>
+      <div class="skill-desc">Attire tous les orbes proches vers votre serpent pendant quelques secondes. Très efficace pour grandir rapidement en début de partie ou après avoir éliminé un adversaire.</div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-name">👻 FANTÔME</div>
+      <div class="skill-desc">Rend votre serpent temporairement intangible. Vous pouvez traverser les corps des adversaires sans mourir. Idéal pour s'échapper d'une situation impossible.</div>
+    </div>
+  </div>
+  <div class="tip">
+    <div class="tip-icon">💡</div>
+    <div class="tip-text"><strong>Combinaison recommandée débutant :</strong> Sprint + Bouclier + Aimant. Le sprint permet de fuir les situations dangereuses, le bouclier pardonne les erreurs, l'aimant accélère la croissance.</div>
+  </div>
+  <div class="tip">
+    <div class="tip-icon">🔥</div>
+    <div class="tip-text"><strong>Combinaison avancée :</strong> Sprint + Téléportation + Explosion. Pour les joueurs agressifs qui maîtrisent le jeu. Déstabilise totalement les adversaires.</div>
+  </div>
+
+  <!-- SKINS -->
+  <h2 id="skins">🎨 Skins et accessoires</h2>
+  <div class="section section-gold">
+    <p>SnakeWars.io propose une large collection de skins et d'accessoires pour personnaliser votre serpent. Tout est purement cosmétique et n'affecte pas le gameplay.</p>
+    <h3>Types de skins disponibles</h3>
+    <div class="skin-row">
+      <span class="skin-tag">🌈 Arc-en-ciel</span>
+      <span class="skin-tag">🔥 Flamme</span>
+      <span class="skin-tag">❄️ Glace</span>
+      <span class="skin-tag">⚡ Électrique</span>
+      <span class="skin-tag">🌌 Galaxie</span>
+      <span class="skin-tag">🎮 Pixel</span>
+      <span class="skin-tag">🐉 Dragon</span>
+      <span class="skin-tag">🌿 Nature</span>
+      <span class="skin-tag">💎 Cristal</span>
+      <span class="skin-tag">🎃 Halloween</span>
+      <span class="skin-tag">🎄 Noël</span>
+      <span class="skin-tag">🎆 Néon</span>
+    </div>
+    <h3>Accessoires</h3>
+    <p>En plus des skins de corps, vous pouvez équiper des accessoires sur la tête de votre serpent : chapeaux, couronne, auréole, ailes, cornes, et des effets visuels de traînée (particules, étoiles, flammes).</p>
+    <h3>Comment débloquer</h3>
+    <p>Tous les skins et accessoires s'achètent avec les <strong>coins</strong> gagnés en jouant. Aucun achat réel n'est nécessaire. Plus vous jouez et performez, plus vous débloquez rapidement.</p>
+  </div>
+
+  <!-- COINS -->
+  <h2 id="coins">💰 Coins et progression</h2>
+  <div class="section">
+    <p>Les coins sont la monnaie de SnakeWars.io. Ils sont gagnés automatiquement à chaque partie selon vos performances :</p>
+    <ul>
+      <li><strong>Orbes mangés</strong> — Chaque orbe rapporte 1 à 3 coins selon sa taille.</li>
+      <li><strong>Kills</strong> — Éliminer un adversaire rapporte un bonus de coins proportionnel à sa taille.</li>
+      <li><strong>Temps de survie</strong> — Chaque seconde passée en jeu rapporte des coins passifs.</li>
+      <li><strong>Classement final</strong> — Bonus ×2 pour Top 10, ×5 pour Top 3, ×10 pour une victoire.</li>
+      <li><strong>Boss éliminé</strong> — Participer à l'élimination du boss rapporte un gros bonus.</li>
+    </ul>
+    <div class="tip">
+      <div class="tip-icon">💰</div>
+      <div class="tip-text"><strong>Astuce farming :</strong> Visez le centre de la carte pour accumuler des kills rapidement. Un seul gros kill peut valoir plus que 5 minutes d'orbes.</div>
+    </div>
+  </div>
+
+  <!-- BOSS -->
+  <h2 id="boss">👾 Le Boss</h2>
+  <div class="section section-red">
+    <p>Périodiquement, un <strong>Boss géant</strong> apparaît au centre de la carte. C'est un serpent de taille colossale contrôlé par l'IA qui attaque tous les joueurs autour de lui.</p>
+    <h3>Caractéristiques du Boss</h3>
+    <ul>
+      <li>Taille imposante — plusieurs fois plus grand que les grands joueurs</li>
+      <li>Se déplace lentement mais de manière imprévisible</li>
+      <li>Absorbe les joueurs qui le touchent par erreur</li>
+      <li>Régénère partiellement sa santé s'il n'est pas attaqué</li>
+    </ul>
+    <h3>Comment le vaincre</h3>
+    <p>Le boss ne peut être tué qu'indirectement : il faut que sa <strong>tête</strong> percute le corps d'un joueur suffisamment gros. Pour ce faire, attirez-le avec votre sillage tout en restant hors de portée. La coordination entre joueurs est très efficace.</p>
+    <h3>Récompense</h3>
+    <p>Le joueur dont le corps a abattu le boss reçoit un <strong>bonus massif de coins et de score</strong>, ainsi qu'une icône spéciale en fin de partie.</p>
+    <div class="warn">
+      <div class="tip-icon">⚠️</div>
+      <div class="warn-text"><strong>Attention :</strong> La présence du boss attire de nombreux joueurs au même endroit. Profitez-en pour éliminer des adversaires distraits, mais méfiez-vous d'être vous-même pris en étau.</div>
+    </div>
+  </div>
+
+  <!-- STRATÉGIES -->
+  <h2 id="strategies">🧠 Stratégies avancées</h2>
+
+  <h3>Début de partie — Phase de farming</h3>
+  <div class="section section-green">
+    <p>En début de partie, tous les serpents sont petits et vulnérables. Priorité absolue : grandir rapidement sans prendre de risques inutiles.</p>
+    <ul>
+      <li>Évitez la zone centrale au tout début — trop de joueurs, trop de risques.</li>
+      <li>Concentrez-vous sur les orbes en périphérie pour grossir sans confrontation.</li>
+      <li>Fuyez systématiquement les serpents plus grands que vous.</li>
+      <li>Utilisez l'aimant si vous l'avez pour accélérer la phase de croissance.</li>
+    </ul>
+  </div>
+
+  <h3>Milieu de partie — Phase d'affrontement</h3>
+  <div class="section section-green">
+    <p>Une fois que vous avez atteint une taille confortable (Top 20 ou plus), vous pouvez commencer à affronter activement les adversaires.</p>
+    <ul>
+      <li>Ciblez les serpents de taille similaire ou inférieure à la vôtre.</li>
+      <li>Ne vous battez pas à deux contre vous simultanément.</li>
+      <li>Utilisez votre sprint pour surprendre les adversaires par l'arrière.</li>
+      <li>Ramassez les orbes laissés par les serpents éliminés par d'autres joueurs — c'est du gain gratuit.</li>
+    </ul>
+  </div>
+
+  <h3>Fin de partie — Phase finale</h3>
+  <div class="section section-green">
+    <p>Quand il reste moins de 10 joueurs, la carte est petite et chaque décision compte.</p>
+    <ul>
+      <li>Adoptez une trajectoire en spirale pour occuper l'espace et forcer les adversaires vers les bords.</li>
+      <li>Gardez vos skills pour le moment critique — ne les gaspillez pas.</li>
+      <li>Méfiez-vous des joueurs qui se cachent dans les recoins de la zone.</li>
+      <li>En tête-à-tête final, la patience paye souvent plus que l'agressivité.</li>
+    </ul>
+  </div>
+
+  <!-- FAQ -->
+  <h2 id="faq">❓ FAQ — Questions fréquentes</h2>
+  <div class="section">
+    <h3>Mon pseudo et mes coins sont-ils sauvegardés ?</h3>
+    <p>Oui, votre pseudo, vos coins, vos skins débloqués et vos skills sont sauvegardés localement dans votre navigateur (localStorage). Ils persistent entre les sessions, mais seront perdus si vous videz le cache de votre navigateur.</p>
+
+    <h3>Est-ce que je joue contre de vraies personnes ?</h3>
+    <p>Oui ! SnakeWars.io est entièrement multijoueur en temps réel. Lorsque peu de joueurs humains sont connectés, des bots IA complètent les parties pour garantir l'expérience. Les joueurs humains sont toujours indiqués par leur pseudo.</p>
+
+    <h3>Pourquoi ai-je des lags ?</h3>
+    <p>La latence peut être causée par votre connexion internet ou votre distance aux serveurs. SnakeWars.io utilise un routage régional (EU/NA/AS) pour minimiser la latence. Essayez de jouer sur WiFi plutôt qu'en 4G pour de meilleures performances.</p>
+
+    <h3>Le jeu est-il vraiment gratuit ?</h3>
+    <p>Oui, SnakeWars.io est entièrement gratuit. Aucun achat in-app, aucune limitation. Les seules publicités apparaissent entre les parties (écran de mort) et ne perturbent jamais le gameplay.</p>
+
+    <h3>Peut-on jouer sans connexion internet ?</h3>
+    <p>Non, une connexion internet est nécessaire pour le mode multijoueur. En revanche, si vous avez installé le jeu en PWA, les ressources du jeu sont mises en cache et chargent plus rapidement.</p>
+
+    <h3>Comment signaler un bug ?</h3>
+    <p>Rendez-vous sur notre page <a href="contact.html">Contact</a> et décrivez le bug avec votre appareil et navigateur. Nous répondons sous 48-72h.</p>
+  </div>
+
+  <a class="cta" href="index.html">🐍 JOUER MAINTENANT</a>
+
+</div>
+
+<footer>
+  <div style="margin-bottom:0.6rem;">
+    <a href="index.html">🎮 Jouer</a> &nbsp;·&nbsp;
+    <a href="about.html">À propos</a> &nbsp;·&nbsp;
+    <a href="how-to-play.html">Guide</a> &nbsp;·&nbsp;
+    <a href="contact.html">Contact</a> &nbsp;·&nbsp;
+    <a href="privacy.html">Confidentialité</a> &nbsp;·&nbsp;
+    <a href="terms.html">CGU</a>
+  </div>
+  <div>© 2026 SnakeWars.io — Hervé Caporale</div>
+</footer>
+
+</div>
+</body>
+</html>
