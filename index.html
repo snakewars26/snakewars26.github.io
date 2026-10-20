@@ -692,7 +692,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:#050810;font-family:
   <!-- Record personnel -->
   <div id="dRecord" style="font-family:'Orbitron',monospace;font-size:.52rem;color:rgba(255,215,0,.7);letter-spacing:.08em;min-height:1.1rem;"></div>
   <div class="dbtns">
-    <button class="dbtn dbtn-green" onclick="replayGame()">▶ REJOUER +250🪙</button>
+    <button class="dbtn dbtn-green" onclick="replayGame()">📺 PUB + REJOUER +250🪙</button>
+    <button class="dbtn dbtn-ghost" onclick="replayFree()">▶ REJOUER</button>
     <button class="dbtn dbtn-ghost" onclick="quitToMenu()">⬅ MENU</button>
   </div>
 </div>
@@ -2292,14 +2293,19 @@ function _showGameOverSW(gs) {
 }
 
 // Boutons écran de mort SnakeWars
+function replayFree(){
+  const _pop = document.getElementById('brResultPopup');
+  if(_pop) _pop.remove();
+  setTimeout(() => startBattleRoyale(), 200);
+}
 function replayGame(){
-  showAdThenDo(() => {
+  requestRewardedAd(() => {
     sd.coins = (sd.coins||0) + COINS_PER_REPLAY;
     saveSD();
     refreshMenu();
     showAdRewardNotif(COINS_PER_REPLAY);
     setTimeout(() => startBattleRoyale(), 200);
-  });
+  }, () => { setTimeout(() => startBattleRoyale(), 200); });
 }
 function quitToMenu(){
   // Fermer la pub overlay si elle est ouverte
@@ -3061,7 +3067,7 @@ function updateBattleRoyale(gs, dt=1) { // Fix C: dt-aware
       const _sbr = document.getElementById('skillBtnsRow');
       if (_sbr) _sbr.style.display = 'none';
       cancelAnimationFrame(animId);
-      setTimeout(() => showAdThenDo(() => showGameOver(gs)), winner.isPlayer ? 5000 : 2500);
+      setTimeout(() => showGameOver(gs), winner.isPlayer ? 5000 : 2500);
     }
   } else if(brAlive === 0) {
     brActive = false;
@@ -3070,7 +3076,7 @@ function updateBattleRoyale(gs, dt=1) { // Fix C: dt-aware
     if(!gs.gameOverTriggered) {
       gs.gameOverTriggered = true;
       cancelAnimationFrame(animId);
-      setTimeout(() => showAdThenDo(() => showGameOver(gs)), 1500);
+      setTimeout(() => showGameOver(gs), 1500);
     }
   }
 }
@@ -3091,11 +3097,11 @@ function announceBRKill(killerName, victimName, remaining) {
 function replayWithAd() {
   const _pop = document.getElementById('brResultPopup');
   if(_pop) _pop.remove();
-  showAdThenDo(() => {
+  requestRewardedAd(() => {
     sd.coins = (sd.coins||0) + 250;
     saveSD(); refreshMenu(); showAdRewardNotif(250);
     setTimeout(() => startBattleRoyale(), 200);
-  });
+  }, () => { setTimeout(() => startBattleRoyale(), 200); });
 }
 
 function showBRResultPopup(gs, rank) {
@@ -3160,8 +3166,9 @@ function showBRResultPopup(gs, rank) {
           <div style="font-size:0.48rem;color:rgba(255,255,255,0.25);margin-top:0.15rem;">en regardant une pub</div>
         </div>
         <button onclick="replayWithAd()" style="width:100%;padding:0.8rem;border:none;border-radius:12px;background:linear-gradient(135deg,#39ff14,#00c800);color:#050810;font-family:'Orbitron',monospace;font-size:0.68rem;font-weight:900;cursor:pointer;letter-spacing:0.05em;box-shadow:0 0 22px rgba(57,255,20,0.45);margin-bottom:0.5rem;">
-          ▶ REJOUER +250 🪙
+          📺 PUB + REJOUER +250 🪙
         </button>
+        <button onclick="replayFree()" style="width:100%;padding:0.55rem;border:1px solid rgba(57,255,20,0.35);border-radius:10px;background:transparent;color:#39ff14;font-family:'Orbitron',monospace;font-size:0.58rem;font-weight:700;cursor:pointer;margin-bottom:0.5rem;">▶ REJOUER (sans pub)</button>
         <button onclick="const p=document.getElementById('brResultPopup');if(p)p.remove();quitToMenu();" style="width:100%;padding:0.55rem;border:1px solid rgba(255,255,255,0.15);border-radius:10px;background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.45);font-family:'Orbitron',monospace;font-size:0.6rem;font-weight:700;cursor:pointer;letter-spacing:0.05em;">
           ⬅ MENU
         </button>
@@ -3228,8 +3235,9 @@ function showBRResultPopup(gs, rank) {
       <div style="font-family:'Orbitron',monospace;font-size:0.6rem;color:rgba(255,255,255,0.3);margin-bottom:1rem;">${rankLabel} / ${total} joueurs</div>
       ${podiumHTML}
       <button onclick="replayWithAd()" style="width:100%;padding:0.78rem;border:none;border-radius:12px;background:linear-gradient(135deg,#39ff14,#00c800);color:#050810;font-family:'Orbitron',monospace;font-size:0.68rem;font-weight:900;cursor:pointer;letter-spacing:0.05em;box-shadow:0 0 22px rgba(57,255,20,0.45);margin-bottom:0.5rem;">
-        ▶ REJOUER +250 🪙
+        📺 PUB + REJOUER +250 🪙
       </button>
+      <button onclick="replayFree()" style="width:100%;padding:0.55rem;border:1px solid rgba(57,255,20,0.35);border-radius:10px;background:transparent;color:#39ff14;font-family:'Orbitron',monospace;font-size:0.58rem;font-weight:700;cursor:pointer;margin-bottom:0.5rem;">▶ REJOUER (sans pub)</button>
       <button onclick="const p=document.getElementById('brResultPopup');if(p)p.remove();quitToMenu();" style="width:100%;padding:0.55rem;border:1px solid rgba(255,255,255,0.18);border-radius:10px;background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.5);font-family:'Orbitron',monospace;font-size:0.6rem;font-weight:700;cursor:pointer;letter-spacing:0.05em;">
         ⬅ MENU
       </button>
@@ -7013,13 +7021,22 @@ function reportBug(){
 const AD_CLIENT = 'ca-pub-5433648295830648';
 const AD_SLOT   = '5101438658';
 
+// ── H5 Games Ads (pubs récompensées Google) ──
+// ⚠️ Mets AD_TEST_MODE = false quand ton site est approuvé par AdSense et H5 Games Ads activé
+const AD_TEST_MODE = true;
+window.adsbygoogle = window.adsbygoogle || [];
+var adBreak = adConfig = function(o){ window.adsbygoogle.push(o); };
+adConfig({ preloadAdBreaks:'on', sound:'on' });
+
 // Initialise AdSense (après consentement)
 function initAds(hasConsent){
   if(!hasConsent) return;
   if(document.querySelector('script[data-adsense-loaded]')) return;
   const s=document.createElement('script');
   s.async=true;
+  s.crossOrigin='anonymous';
   s.setAttribute('data-adsense-loaded','1');
+  if(AD_TEST_MODE) s.setAttribute('data-adbreak-test','on');
   s.src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client='+AD_CLIENT;
   document.head.appendChild(s);
 }
@@ -7054,104 +7071,71 @@ const AD_TIPS = [
   "Économise tes coins pour le skill Virus (450🪙) — le plus puissant en mêlée !",
 ];
 
-// Pub après mort → puis callback (rejouer / menu)
+// Plus de pub forcée : on exécute directement la suite
 function showAdThenDo(callback){
-  // Si l'overlay est déjà ouvert ET visuellement visible, on met juste à jour le callback
-  const overlay = document.getElementById('adOverlay');
-  if(_adOverlayOpen && overlay && overlay.style.display !== 'none'){
-    if(typeof callback==='function') adCallback=callback; return;
+  if(typeof callback==='function') callback();
+}
+function closeAdAndContinue(){}
+
+// Petit message (pub indisponible, cookies...)
+function adInfoNotif(msg){
+  const el = document.getElementById('adRewardNotif');
+  if(!el) return;
+  el.textContent = msg;
+  el.style.opacity = '1';
+  setTimeout(()=>{ el.style.opacity = '0'; }, 3500);
+}
+
+// Pub récompensée Google (le joueur choisit de la regarder)
+// onReward : appelé SEULEMENT si la pub a été regardée jusqu'au bout
+// onNoReward : appelé si pas de pub / pub fermée avant la fin
+function requestRewardedAd(onReward, onNoReward){
+  let done = false, adShown = false, tmo = null;
+  const finish = (ok)=>{
+    if(done) return;
+    done = true;
+    clearTimeout(tmo);
+    if(ok){ if(typeof onReward==='function') onReward(); }
+    else { if(typeof onNoReward==='function') onNoReward(); }
+  };
+  let consent = false;
+  try{ consent = localStorage.getItem('sw_ck') === 'yes'; }catch(e){}
+  if(!consent){
+    adInfoNotif('🍪 Accepte les cookies pour regarder une pub');
+    finish(false);
+    return;
   }
-  // Overlay fermé hors du chemin normal → on ré-ouvre proprement
-  _adOverlayOpen = true;
-  stopMusic(); // couper la musique dès l'ouverture de l'overlay pub
-  adCallback = callback;
-  overlay.style.display = 'flex';
-  overlay.scrollTop = 0;
-
-  // Stats de la dernière partie
-  const el = document.getElementById('adStatScore');
-  const ek = document.getElementById('adStatKills');
-  const ec = document.getElementById('adStatCoins');
-  if(el) el.textContent = sd.bestScore > 0 ? sd.bestScore.toLocaleString() : '—';
-  if(ek) ek.textContent = sd.totalKills > 0 ? sd.totalKills : '—';
-  if(ec) ec.textContent = sd.coins > 0 ? sd.coins.toLocaleString() : '—';
-
-  // Astuce aléatoire
-  const tip = document.getElementById('adTipText');
-  if(tip) tip.textContent = AD_TIPS[Math.floor(Math.random() * AD_TIPS.length)];
-
-  // Réinjecter le slot AdSense à chaque appel (sinon AdSense ne recharge pas)
-  const adSlotContainer = document.getElementById('adSlotContainer');
-  if(adSlotContainer){
-    adSlotContainer.innerHTML = `<ins class="adsbygoogle"
-      style="display:block;width:320px;height:480px;"
-      data-ad-client="${AD_CLIENT}"
-      data-ad-slot="${AD_SLOT}"
-      data-ad-format="rectangle"
-      data-full-width-responsive="false"></ins>`;
-    try{(window.adsbygoogle=window.adsbygoogle||[]).push({});}catch(e){}
-  }
-
-  // Compte à rebours 8s avec barre de progression puis bouton REJOUER
-  const countdown = document.getElementById('adCountdown');
-  const closeBtn  = document.getElementById('adCloseBtn');
-  const timerSpan = document.getElementById('adTimer');
-  const progressBar = document.getElementById('adProgressBar');
-
-  // Stopper tout timer précédent
-  if(adTimerInterval){ clearInterval(adTimerInterval); adTimerInterval = null; }
-
-  if(!closeBtn || !countdown || !timerSpan){ console.error('[SW] adOverlay elements manquants'); return; }
-  closeBtn.style.display  = 'none';
-  countdown.style.display = 'block';
-
-  // Réinitialiser la barre SANS transition, puis la relancer
-  if(progressBar){
-    progressBar.style.transition = 'none';
-    progressBar.style.width = '0%';
-  }
-  // Forcer le reflow avant de remettre la transition et lancer à 100%
-  requestAnimationFrame(()=>{
-    requestAnimationFrame(()=>{
-      if(progressBar){
-        progressBar.style.transition = 'width 8s linear';
-        progressBar.style.width = '100%';
+  tmo = setTimeout(()=>{
+    if(!adShown){ adInfoNotif('📺 Aucune pub disponible pour le moment'); finish(false); }
+  }, 10000);
+  try{
+    adBreak({
+      type: 'reward',
+      name: 'coins-reward',
+      beforeAd: ()=>{ adShown = true; clearTimeout(tmo); try{ stopMusic(); }catch(e){} },
+      afterAd: ()=>{},
+      beforeReward: (showAdFn)=>{ showAdFn(); },
+      adDismissed: ()=>{ finish(false); },
+      adViewed: ()=>{ finish(true); },
+      adBreakDone: (info)=>{
+        if(done) return;
+        if(info && info.breakStatus === 'viewed'){ finish(true); return; }
+        if(!adShown) adInfoNotif('📺 Aucune pub disponible pour le moment');
+        finish(false);
       }
     });
-  });
-
-  const _adDuration = 8000;
-  const _adStart = Date.now();
-  timerSpan.textContent = 8;
-  adTimerInterval = setInterval(()=>{
-    const elapsed = Date.now() - _adStart;
-    const remaining = Math.ceil((_adDuration - elapsed) / 1000);
-    if(remaining > 0){
-      timerSpan.textContent = remaining;
-    } else {
-      timerSpan.textContent = 0;
-      clearInterval(adTimerInterval);
-      adTimerInterval = null;
-      countdown.style.display = 'none';
-      closeBtn.style.display  = 'block';
-    }
-  }, 250);
+  }catch(e){
+    adInfoNotif('📺 Aucune pub disponible pour le moment');
+    finish(false);
+  }
 }
 
-function closeAdAndContinue(){
-  document.getElementById('adOverlay').style.display = 'none';
-  clearInterval(adTimerInterval);
-  _adOverlayOpen = false;
-  if(adCallback){ adCallback(); adCallback = null; }
-}
-
-// Pub récompensée (bouton "Regarder une pub → +500 coins")
+// Bouton "Regarder une pub → +500 coins"
 function watchRewardedAd(extraCallback){
-  // Ne jamais forcer le consentement — l'overlay pub fait office de proxy
-  showAdThenDo(()=>{
+  requestRewardedAd(()=>{
     earnCoinsFromAd();
     if(typeof extraCallback === 'function') extraCallback();
-  });
+  }, null);
 }
 
 function earnCoinsFromAd(){
@@ -7387,65 +7371,7 @@ window.addEventListener('DOMContentLoaded', () => {
   }, 4000);
 });
 </script>
-<div id="adOverlay" style="display:none;position:fixed;inset:0;z-index:99999;background:linear-gradient(180deg,#050810 0%,#0a1020 100%);flex-direction:column;align-items:center;overflow-y:auto;padding:1.2rem 1rem 2rem;" ontouchstart="void(0)">
 
-  <!-- EN-TÊTE SNAKEWARS -->
-  <div style="width:min(360px,95vw);text-align:center;margin-bottom:1rem;">
-    <div style="font-family:'Orbitron',monospace;font-size:1.4rem;font-weight:900;background:linear-gradient(135deg,#00f5ff 0%,#39ff14 45%,#ffd700 75%,#ff006e 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:0.1em;filter:drop-shadow(0 0 12px rgba(0,245,255,.4));">SNAKEWARS</div>
-    <div style="font-size:0.5rem;color:rgba(255,255,255,0.3);letter-spacing:0.35em;margin-top:0.15rem;">⚡ BATTLE ROYALE ⚡</div>
-  </div>
-
-  <!-- STATS DE LA PARTIE -->
-  <div id="adStatsRow" style="width:min(360px,95vw);display:grid;grid-template-columns:repeat(3,1fr);gap:0.5rem;margin-bottom:1rem;">
-    <div style="background:rgba(0,245,255,0.06);border:1px solid rgba(0,245,255,0.15);border-radius:10px;padding:0.5rem;text-align:center;">
-      <div id="adStatScore" style="font-family:'Orbitron',monospace;font-size:1rem;font-weight:900;color:#00f5ff;">—</div>
-      <div style="font-size:0.5rem;color:rgba(255,255,255,0.4);margin-top:0.15rem;">SCORE</div>
-    </div>
-    <div style="background:rgba(255,0,110,0.06);border:1px solid rgba(255,0,110,0.15);border-radius:10px;padding:0.5rem;text-align:center;">
-      <div id="adStatKills" style="font-family:'Orbitron',monospace;font-size:1rem;font-weight:900;color:#ff006e;">—</div>
-      <div style="font-size:0.5rem;color:rgba(255,255,255,0.4);margin-top:0.15rem;">KILLS</div>
-    </div>
-    <div style="background:rgba(255,215,0,0.06);border:1px solid rgba(255,215,0,0.15);border-radius:10px;padding:0.5rem;text-align:center;">
-      <div id="adStatCoins" style="font-family:'Orbitron',monospace;font-size:1rem;font-weight:900;color:#ffd700;">—</div>
-      <div style="font-size:0.5rem;color:rgba(255,255,255,0.4);margin-top:0.15rem;">COINS</div>
-    </div>
-  </div>
-
-  <!-- ASTUCE DE JEU -->
-  <div style="width:min(360px,95vw);background:rgba(57,255,20,0.05);border:1px solid rgba(57,255,20,0.2);border-radius:14px;padding:0.8rem 1rem;margin-bottom:1rem;text-align:center;">
-    <div style="font-family:'Orbitron',monospace;font-size:0.55rem;color:#39ff14;letter-spacing:0.2em;margin-bottom:0.4rem;">💡 ASTUCE DE JEU</div>
-    <div id="adTipText" style="font-size:0.72rem;color:rgba(255,255,255,0.75);line-height:1.6;font-family:'Exo 2',sans-serif;">Coupe la route de tes adversaires pour les éliminer et absorber leur masse !</div>
-  </div>
-
-  <!-- ESPACE PUBLICITAIRE -->
-  <div style="width:min(360px,95vw);margin-bottom:1rem;">
-    <div style="font-size:0.48rem;color:rgba(255,255,255,0.2);text-align:center;margin-bottom:0.35rem;font-family:'Exo 2',sans-serif;letter-spacing:0.15em;">PUBLICITÉ</div>
-    <div id="adSlotContainer" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:14px;min-height:100px;display:flex;align-items:center;justify-content:center;overflow:hidden;">
-    </div>
-  </div>
-
-  <!-- BARRE DE PROGRESSION -->
-  <div style="width:min(360px,95vw);margin-bottom:1rem;">
-    <div style="background:rgba(255,255,255,0.07);border-radius:99px;height:6px;overflow:hidden;">
-      <div id="adProgressBar" style="height:100%;width:0%;background:linear-gradient(90deg,#00f5ff,#39ff14);border-radius:99px;transition:none;"></div>
-    </div>
-  </div>
-
-  <!-- DECOMPTE -->
-  <div id="adCountdown" style="display:none;text-align:center;margin-bottom:0.8rem;">
-    <div style="font-family:'Orbitron',monospace;font-size:0.58rem;color:rgba(255,255,255,0.4);letter-spacing:0.2em;">
-      PUB DANS <span id="adTimer" style="color:#ffd700;font-size:0.75rem;">8</span>s
-    </div>
-  </div>
-
-  <!-- BOUTON FERMER -->
-  <button id="adCloseBtn"
-    onclick="closeAdAndContinue()"
-    style="display:none;width:min(320px,90vw);padding:0.9rem;border:none;border-radius:14px;background:linear-gradient(135deg,#39ff14,#00c800);color:#050810;font-family:'Orbitron',monospace;font-size:0.75rem;font-weight:900;cursor:pointer;letter-spacing:0.05em;box-shadow:0 0 24px rgba(57,255,20,0.5);">
-    &#9654; CONTINUER
-  </button>
-
-</div><!-- /adOverlay -->
 
 <!-- ═══ FOOTER SEO — liens découvrables par Google ═══ -->
 <footer id="siteFooter" style="position:fixed;bottom:0;left:0;width:100%;z-index:1;
