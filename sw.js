@@ -1,21 +1,23 @@
-// SnakeWars Service Worker — Cache stratégique
-const CACHE_NAME = 'snakewars-v1';
+// SnakeWars Service Worker — cache stratégique
+const CACHE_NAME = 'snakewars-v2';
 const ASSETS = [
+  './',
   './index.html',
+  './style.css',
+  './game.js',
   './manifest.json',
+  './favicon.png',
   './preview.png',
   './icon-192.png',
   './icon-512.png',
 ];
 
-// Installation : mise en cache des assets essentiels
+// Installation : mise en cache tolérante (un fichier manquant n'annule plus tout)
 self.addEventListener('install', e => {
   e.waitUntil(
-    caches.open(CACHE_NAME).then(cache => {
-      return cache.addAll(ASSETS).catch(err => {
-        console.warn('[SW] Cache partiel:', err);
-      });
-    })
+    caches.open(CACHE_NAME).then(cache =>
+      Promise.allSettled(ASSETS.map(a => cache.add(a)))
+    )
   );
   self.skipWaiting();
 });
@@ -24,44 +26,41 @@ self.addEventListener('install', e => {
 self.addEventListener('activate', e => {
   e.waitUntil(
     caches.keys().then(keys =>
-      Promise.all(keys
-        .filter(k => k !== CACHE_NAME)
-        .map(k => caches.delete(k))
-      )
+      Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))
     )
   );
   self.clients.claim();
 });
 
-// Fetch : Network-first pour le HTML/JS, Cache-first pour images
+function putInCache(req, res) {
+  if (res && res.ok) {
+    const clone = res.clone();
+    caches.open(CACHE_NAME).then(c => c.put(req, clone));
+  }
+}
+
 self.addEventListener('fetch', e => {
-  const url = new URL(e.request.url);
+  const req = e.request;
+  if (req.method !== 'GET') return;
+  const url = new URL(req.url);
 
   // Ignorer les requêtes externes (Ably, AdSense, Analytics...)
-  if(url.origin !== location.origin) return;
+  if (url.origin !== location.origin) return;
 
   // Images : cache-first
-  if(e.request.destination === 'image') {
+  if (req.destination === 'image') {
     e.respondWith(
-      caches.match(e.request).then(cached => {
-        return cached || fetch(e.request).then(res => {
-          const clone = res.clone();
-          caches.open(CACHE_NAME).then(c => c.put(e.request, clone));
-          return res;
-        });
-      })
+      caches.match(req).then(cached =>
+        cached || fetch(req).then(res => { putInCache(req, res); return res; })
+      )
     );
     return;
   }
 
-  // HTML/JS : network-first, fallback cache
+  // HTML / JS / CSS : network-first, repli sur le cache hors-ligne
   e.respondWith(
-    fetch(e.request)
-      .then(res => {
-        const clone = res.clone();
-        caches.open(CACHE_NAME).then(c => c.put(e.request, clone));
-        return res;
-      })
-      .catch(() => caches.match(e.request))
+    fetch(req)
+      .then(res => { putInCache(req, res); return res; })
+      .catch(() => caches.match(req, { ignoreSearch: true }))
   );
 });
