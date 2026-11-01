@@ -6333,3 +6333,192 @@ window.addEventListener('DOMContentLoaded',()=>{
     localStorage.setItem('sw_pseudo',e.target.value);
   });
 });
+
+
+// ═══════════════════════════════════════════════
+// 🎁 RÉCOMPENSE QUOTIDIENNE + 🎯 MISSIONS DU JOUR
+// ═══════════════════════════════════════════════
+const DAILY_REWARDS = [100, 150, 200, 300, 400, 500, 1000]; // jours 1 → 7 de la série
+
+function _dayKey(offset){
+  const d = new Date(); d.setDate(d.getDate() + (offset||0));
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function _seedFrom(str){ let h=0; for(let i=0;i<str.length;i++) h=(h*31+str.charCodeAt(i))>>>0; return h; }
+function _pick(arr, seed){ return arr[seed % arr.length]; }
+
+// ── Missions : 3 par jour (kills, parties, classement), identiques toute la journée ──
+function _genMissions(key){
+  const s = _seedFrom(key);
+  const k = _pick([{n:3,rw:150},{n:5,rw:250},{n:8,rw:400}], s);
+  const g = _pick([{n:2,rw:100},{n:3,rw:150},{n:4,rw:250}], s>>>3);
+  const t = _pick([{n:20,rw:150},{n:10,rw:300}], s>>>5);
+  return [
+    {t:'kills', n:k.n, rw:k.rw, c:false},
+    {t:'games', n:g.n, rw:g.rw, c:false},
+    {t:'top',   n:t.n, rw:t.rw, c:false},
+  ];
+}
+function _ensureDaily(){
+  const key = _dayKey(0);
+  if(!sd.dm || sd.dm.d !== key){
+    sd.dm = { d:key, kills:0, games:0, best:999, list:_genMissions(key) };
+    saveSD();
+  }
+  return sd.dm;
+}
+function _missionLabel(m){
+  if(m.t==='kills') return '☠️ Élimine '+m.n+' serpents';
+  if(m.t==='games') return '🎮 Joue '+m.n+' parties';
+  return '🏅 Termine dans le top '+m.n;
+}
+function _missionProgress(m, dm){
+  if(m.t==='kills') return Math.min(dm.kills, m.n);
+  if(m.t==='games') return Math.min(dm.games, m.n);
+  return dm.best <= m.n ? 1 : 0;
+}
+function _missionTarget(m){ return m.t==='top' ? 1 : m.n; }
+
+// Appelé à la fin de chaque partie (via showBRResultPopup)
+function missionsOnGameEnd(gs, rank){
+  const dm = _ensureDaily();
+  dm.games += 1;
+  const k = (gs && gs.player && gs.player.kills) || 0;
+  dm.kills += k;
+  if(rank > 0 && rank < dm.best) dm.best = rank;
+  saveSD();
+}
+
+function claimMission(i){
+  const dm = _ensureDaily(); const m = dm.list[i];
+  if(!m || m.c || _missionProgress(m, dm) < _missionTarget(m)) return;
+  m.c = true;
+  sd.coins = Math.min((sd.coins||0) + m.rw, 99999);
+  saveSD(); refreshMenu(); showAdRewardNotif(m.rw);
+}
+
+// ── Récompense quotidienne ──
+function _dailyState(){
+  const today = _dayKey(0), yest = _dayKey(-1);
+  const last = sd.dailyLast || '';
+  let streak = sd.dailyStreak || 0;
+  const claimed = (last === today);
+  if(!claimed && last !== yest) streak = 0; // série brisée
+  const nextDay = claimed ? streak : streak + 1;
+  const idx = Math.max(0, (nextDay - 1)) % 7;
+  return { claimed, streak, nextDay, reward: DAILY_REWARDS[idx] };
+}
+function claimDaily(mult){
+  const st = _dailyState();
+  if(st.claimed) return;
+  const amount = st.reward * (mult||1);
+  sd.dailyLast = _dayKey(0);
+  sd.dailyStreak = st.nextDay;
+  sd.coins = Math.min((sd.coins||0) + amount, 99999);
+  saveSD(); refreshMenu(); showAdRewardNotif(amount);
+  const ov = document.getElementById('dailyModal'); if(ov) ov.remove();
+}
+function claimDailyDouble(){
+  const st = _dailyState();
+  if(st.claimed) return;
+  requestRewardedAd(()=>claimDaily(2), ()=>{ adInfoNotif('📺 Pub non terminée — pas de bonus x2'); });
+}
+function showDailyModal(){
+  if(document.getElementById('dailyModal')) return;
+  const st = _dailyState();
+  if(st.claimed) return;
+  let days = '';
+  for(let i=0;i<7;i++){
+    const done = i < st.streak % 7 || (st.streak>0 && st.streak%7===0 && false);
+    const cur = i === ((st.nextDay-1)%7);
+    days += '<div style="flex:1;min-width:0;padding:.3rem .1rem;border-radius:7px;border:1px solid '+(cur?'#ffd700':'rgba(255,255,255,.12)')+';background:'+(cur?'rgba(255,215,0,.15)':(done?'rgba(57,255,20,.12)':'rgba(255,255,255,.03)'))+';text-align:center;">'+
+      '<div style="font-size:.38rem;color:rgba(255,255,255,.45);">J'+(i+1)+'</div>'+
+      '<div style="font-size:.5rem;font-weight:900;color:'+(cur?'#ffd700':'#fff')+';">'+(done?'✅':DAILY_REWARDS[i])+'</div></div>';
+  }
+  const ov = document.createElement('div');
+  ov.id = 'dailyModal';
+  ov.style.cssText = 'position:fixed;inset:0;z-index:9500;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;padding:1rem;font-family:Orbitron,monospace;';
+  ov.innerHTML =
+    '<div style="width:100%;max-width:380px;background:#0a0a1a;border:2px solid #ffd700;border-radius:16px;padding:1.2rem;text-align:center;color:#fff;box-shadow:0 0 30px rgba(255,215,0,.3);">'+
+      '<div style="font-size:2rem;">🎁</div>'+
+      '<div style="font-size:.8rem;font-weight:900;color:#ffd700;margin:.2rem 0;">RÉCOMPENSE DU JOUR</div>'+
+      '<div style="font-size:.5rem;color:rgba(255,255,255,.5);margin-bottom:.8rem;">Série : '+st.streak+' jour'+(st.streak>1?'s':'')+' — reviens chaque jour !</div>'+
+      '<div style="display:flex;gap:.25rem;margin-bottom:1rem;">'+days+'</div>'+
+      '<button onclick="claimDaily(1)" style="width:100%;padding:.7rem;border:none;border-radius:12px;background:linear-gradient(135deg,#ffd700,#ff9500);color:#050810;font-family:inherit;font-size:.65rem;font-weight:900;cursor:pointer;margin-bottom:.5rem;">RÉCUPÉRER +'+st.reward+' 🪙</button>'+
+      '<button onclick="claimDailyDouble()" style="width:100%;padding:.6rem;border:1px solid #39ff14;border-radius:12px;background:rgba(57,255,20,.08);color:#39ff14;font-family:inherit;font-size:.55rem;font-weight:900;cursor:pointer;margin-bottom:.4rem;">📺 PUB → x2 (+'+(st.reward*2)+' 🪙)</button>'+
+      '<button onclick="document.getElementById(\'dailyModal\').remove()" style="background:none;border:none;color:rgba(255,255,255,.35);font-family:inherit;font-size:.5rem;cursor:pointer;">Plus tard</button>'+
+    '</div>';
+  document.body.appendChild(ov);
+}
+
+// ── Panneau dans le menu ──
+function renderDailyPanel(){
+  const anchor = document.getElementById('adRewardNotif');
+  if(!anchor) return;
+  let panel = document.getElementById('dailyPanel');
+  if(!panel){
+    panel = document.createElement('div');
+    panel.id = 'dailyPanel';
+    panel.style.cssText = 'width:100%;font-family:Orbitron,monospace;';
+    anchor.insertAdjacentElement('afterend', panel);
+  }
+  const dm = _ensureDaily(), st = _dailyState();
+  let h = '';
+  // Bouton cadeau
+  h += st.claimed
+    ? '<div style="text-align:center;font-size:.45rem;color:rgba(255,255,255,.35);margin-bottom:.5rem;">🎁 Récompense du jour récupérée · série '+st.streak+' 🔥</div>'
+    : '<button onclick="showDailyModal()" style="width:100%;margin-bottom:.5rem;padding:.6rem;border-radius:12px;border:2px solid #ff9500;background:rgba(255,149,0,.12);color:#ffb347;font-family:inherit;font-size:.6rem;font-weight:900;cursor:pointer;">🎁 RÉCOMPENSE DU JOUR : +'+st.reward+' 🪙</button>';
+  // Missions
+  h += '<div style="border:1px solid rgba(0,245,255,.25);background:rgba(0,245,255,.05);border-radius:12px;padding:.6rem;">'+
+       '<div style="font-size:.5rem;font-weight:900;color:#00f5ff;letter-spacing:.08em;margin-bottom:.5rem;">🎯 MISSIONS DU JOUR</div>';
+  dm.list.forEach((m,i)=>{
+    const p = _missionProgress(m, dm), tg = _missionTarget(m), done = p >= tg;
+    const pct = Math.round(p/tg*100);
+    const right = m.c ? '<span style="color:#39ff14;font-size:.5rem;">✅</span>'
+      : (done ? '<button onclick="claimMission('+i+')" style="padding:.25rem .5rem;border:none;border-radius:8px;background:#39ff14;color:#050810;font-family:inherit;font-size:.45rem;font-weight:900;cursor:pointer;">+'+m.rw+' 🪙</button>'
+              : '<span style="font-size:.45rem;color:#ffd700;">'+m.rw+' 🪙</span>');
+    h += '<div style="display:flex;align-items:center;gap:.5rem;margin-bottom:'+(i<2?'.5rem':'0')+';">'+
+           '<div style="flex:1;min-width:0;">'+
+             '<div style="font-size:.48rem;color:#fff;margin-bottom:.2rem;">'+_missionLabel(m)+(m.t==='top'?'':' <span style="color:rgba(255,255,255,.4);">('+p+'/'+tg+')</span>')+'</div>'+
+             '<div style="height:5px;border-radius:3px;background:rgba(255,255,255,.1);overflow:hidden;"><div style="height:100%;width:'+pct+'%;background:'+(done?'#39ff14':'#00f5ff')+';"></div></div>'+
+           '</div>'+right+'</div>';
+  });
+  h += '</div>';
+  panel.innerHTML = h;
+}
+
+// Branchements (sans toucher au reste du code)
+(function(){
+  const _origRefresh = refreshMenu;
+  refreshMenu = function(){ _origRefresh.apply(this, arguments); try{ renderDailyPanel(); }catch(e){} };
+  const _origPopup = showBRResultPopup;
+  showBRResultPopup = function(gs, rank){
+    try{ missionsOnGameEnd(gs, rank); }catch(e){ console.error('missions', e); }
+    return _origPopup.apply(this, arguments);
+  };
+  window.addEventListener('DOMContentLoaded', ()=>{
+    try{ renderDailyPanel(); }catch(e){}
+    setTimeout(()=>{
+      const menu = document.getElementById('menuScreen');
+      if(menu && menu.classList.contains('active')) showDailyModal();
+    }, 2000);
+  });
+})();
+
+// ═══════════════════════════════════════════════
+// 🛡️ FILET DE SÉCURITÉ : une erreur ne doit plus bloquer le joueur
+// ═══════════════════════════════════════════════
+(function(){
+  let last = 0;
+  window.addEventListener('error', (e)=>{
+    console.error('[SnakeWars] Erreur :', e.message, e.filename+':'+e.lineno);
+    const now = Date.now();
+    if(now - last < 15000) return; last = now;
+    const t = document.createElement('div');
+    t.style.cssText = 'position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:100000;background:#2a0010;border:1px solid #ff006e;color:#fff;padding:.5rem .8rem;border-radius:10px;font-family:Orbitron,monospace;font-size:.5rem;display:flex;gap:.6rem;align-items:center;';
+    t.innerHTML = '⚠️ Petit souci technique <button style="background:#ff006e;border:none;color:#fff;border-radius:6px;padding:.25rem .5rem;font-family:inherit;font-size:.5rem;cursor:pointer;">MENU</button>';
+    t.querySelector('button').onclick = ()=>{ t.remove(); try{ quitToMenu(); }catch(_){ location.reload(); } };
+    document.body.appendChild(t);
+    setTimeout(()=>t.remove(), 8000);
+  });
+})();
