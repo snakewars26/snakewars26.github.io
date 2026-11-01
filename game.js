@@ -6079,8 +6079,9 @@ const AD_TEST_MODE = true;
 const FAKE_AD_MODE = true;
 const FAKE_AD_SECONDS = 10;
 window.adsbygoogle = window.adsbygoogle || [];
-var adBreak = adConfig = function(o){ window.adsbygoogle.push(o); };
-adConfig({ preloadAdBreaks:'on', sound:'on' });
+function adBreak(o){ window.adsbygoogle.push(o); }
+function adConfig(o){ window.adsbygoogle.push(o); }
+try{ adConfig({ preloadAdBreaks:'on', sound:'on' }); }catch(e){}
 
 // Initialise AdSense (après consentement)
 function initAds(hasConsent){
@@ -6178,7 +6179,11 @@ function showFakeAd(onReward, onNoReward){
 // onReward : appelé SEULEMENT si la pub a été regardée jusqu'au bout
 // onNoReward : appelé si pas de pub / pub fermée avant la fin
 function requestRewardedAd(onReward, onNoReward){
-  if(FAKE_AD_MODE){ showFakeAd(onReward, onNoReward); return; }
+  if(FAKE_AD_MODE){
+    try{ showFakeAd(onReward, onNoReward); }
+    catch(e){ console.error('showFakeAd', e); if(typeof onNoReward==='function') onNoReward(); }
+    return;
+  }
   let done = false, adShown = false, tmo = null;
   const finish = (ok)=>{
     if(done) return;
