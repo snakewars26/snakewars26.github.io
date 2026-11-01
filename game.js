@@ -6074,6 +6074,10 @@ const AD_SLOT   = '5101438658';
 // ── H5 Games Ads (pubs récompensées Google) ──
 // ⚠️ Mets AD_TEST_MODE = false quand ton site est approuvé par AdSense et H5 Games Ads activé
 const AD_TEST_MODE = true;
+// 🔧 Fausse fenêtre de pub (10s) tant que Google ne fournit pas de vraies pubs.
+// Mets FAKE_AD_MODE = false quand AdSense / H5 Games Ads est approuvé.
+const FAKE_AD_MODE = true;
+const FAKE_AD_SECONDS = 10;
 window.adsbygoogle = window.adsbygoogle || [];
 var adBreak = adConfig = function(o){ window.adsbygoogle.push(o); };
 adConfig({ preloadAdBreaks:'on', sound:'on' });
@@ -6136,10 +6140,45 @@ function adInfoNotif(msg){
   setTimeout(()=>{ el.style.opacity = '0'; }, 3500);
 }
 
+
+// Fausse fenêtre de pub : compte à rebours puis récompense
+function showFakeAd(onReward, onNoReward){
+  if(document.getElementById('fakeAdOverlay')) return;
+  try{ stopMusic(); }catch(e){}
+  const tip = AD_TIPS[Math.floor(Math.random()*AD_TIPS.length)];
+  const ov = document.createElement('div');
+  ov.id = 'fakeAdOverlay';
+  ov.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.92);display:flex;align-items:center;justify-content:center;padding:1rem;font-family:Orbitron,monospace;';
+  ov.innerHTML =
+    '<div style="width:100%;max-width:420px;background:#0a0a1a;border:2px solid #ffd700;border-radius:16px;padding:1.4rem;text-align:center;color:#fff;box-shadow:0 0 30px rgba(255,215,0,.25);">'+
+      '<div style="font-size:.6rem;color:#888;letter-spacing:.1em;margin-bottom:.8rem;">📺 PUBLICITÉ</div>'+
+      '<div style="height:180px;border:1px dashed rgba(255,255,255,.25);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#777;font-size:.7rem;margin-bottom:1rem;">Aucune pub pour le moment</div>'+
+      '<div style="font-size:.55rem;color:#aaa;line-height:1.5;margin-bottom:1rem;">💡 '+tip+'</div>'+
+      '<div id="fakeAdTimer" style="font-size:1.4rem;font-weight:900;color:#ffd700;">'+FAKE_AD_SECONDS+'</div>'+
+      '<div style="font-size:.5rem;color:#888;margin-top:.3rem;">Récompense dans quelques secondes…</div>'+
+      '<button id="fakeAdClose" style="margin-top:1rem;font-family:inherit;font-size:.55rem;padding:.4rem .9rem;border-radius:8px;border:1px solid rgba(255,255,255,.3);background:transparent;color:#aaa;cursor:pointer;">✕ Fermer (sans récompense)</button>'+
+    '</div>';
+  document.body.appendChild(ov);
+  let left = FAKE_AD_SECONDS, ended = false;
+  const timerEl = ov.querySelector('#fakeAdTimer');
+  const close = (ok)=>{
+    if(ended) return; ended = true;
+    clearInterval(iv); ov.remove();
+    if(ok){ if(typeof onReward==='function') onReward(); }
+    else { if(typeof onNoReward==='function') onNoReward(); }
+  };
+  const iv = setInterval(()=>{
+    left--; timerEl.textContent = Math.max(left,0);
+    if(left<=0) close(true);
+  },1000);
+  ov.querySelector('#fakeAdClose').onclick = ()=>close(false);
+}
+
 // Pub récompensée Google (le joueur choisit de la regarder)
 // onReward : appelé SEULEMENT si la pub a été regardée jusqu'au bout
 // onNoReward : appelé si pas de pub / pub fermée avant la fin
 function requestRewardedAd(onReward, onNoReward){
+  if(FAKE_AD_MODE){ showFakeAd(onReward, onNoReward); return; }
   let done = false, adShown = false, tmo = null;
   const finish = (ok)=>{
     if(done) return;
